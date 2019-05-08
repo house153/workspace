@@ -1,0 +1,12 @@
+com\house\variety\dto\LatestOrderStatistics.class
+com\house\variety\dto\MonthlyLineAndCity.class
+com\house\variety\service\impl\DataCommonServiceImpl.class
+com\house\variety\dto\MonthlyTurnover.class
+com\house\variety\dto\MonthlyBizBranch.class
+com\house\variety\util\DateUtils.class
+com\house\variety\service\DataCommonService.class
+com\house\variety\config\MybatisPlusConfig.class
+com\house\variety\controller\DataCommonController.class
+com\house\variety\VarietyApiApplication.class
+com\house\variety\mapper\DataCommonMapper.class
+com\house\variety\dto\MonthlyOrdersNumber.class

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="variety-admin" />
+        <module name="variety-api" />
+        <module name="variety-common" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="pom-base" target="1.8" />
+      <module name="variety" target="1.8" />
+      <module name="variety-admin" target="1.8" />
+      <module name="variety-api" target="1.8" />
+      <module name="variety-common" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

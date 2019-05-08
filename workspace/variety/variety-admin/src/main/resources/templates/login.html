@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title th:utext="#{system.name}"></title>
+    <meta name="keywords" th:content="#{system.name}">
+    <meta name="description" th:content="#{system.name}">
+
+    <link rel="shortcut icon" href="favicon.ico" th:href="@{/favicon.ico}">
+    <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="../css/font-awesome.css" th:href="@{/css/font-awesome.css}" rel="stylesheet">
+    <link href="../css/animate.css" th:href="@{/css/animate.css}" rel="stylesheet">
+    <link href="../css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <script>if(window.top !== window.self){ window.top.location = window.location;}</script>
+</head>
+
+<body class="gray-bg" @keyup.enter="login">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown" id="rrapp">
+        <div>
+            <div>
+                <h1 class="logo-name">HSL</h1>
+            </div>
+            <h3 th:utext="#{system.name}"></h3>
+            <div v-if="error" class="alert alert-danger alert-dismissible">
+                <h4 style="margin-bottom: 0px;"><i class="fa fa-exclamation-triangle"></i> {{errorMsg}}</h4>
+            </div>
+            <form class="m-t" role="form" action="index.html">
+                <div class="form-group">
+                    <input type="text" class="form-control"  v-model.trim="username" placeholder="用户名"  required="false">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control"  v-model.trim="password" placeholder="密码"  required="true"/>
+                </div>
+
+                <div class="form-group"  th:if="${captchaEnabled==true}">
+                    <div class="col-sm-6" style="padding: 0px;">
+                        <input type="number" v-model="validateCode" class="form-control code" placeholder="验证码" maxlength="5">
+                    </div>
+                    <div class="col-xs-6" style="margin-bottom: 10px;">
+                        <a href="javascript:void(0);" title="点击更换验证码">
+                            <img th:src="@{captcha/captchaImage(type=${captchaType})}" class="imgcode" @click="refreshCode" width="85%" height="34"/>
+                        </a>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary block full-width m-b" @click="login" >登 录</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+    <script src="js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="js/vue.min.js" th:src="@{/js/vue.min.js}"></script>
+    <script th:inline="javascript"> var ctx = [[@{/}]]; var captchaType = [[${captchaType}]]; </script>
+    <script th:inline="javascript">
+        var TIME_COUNT = 60;
+        var vm = new Vue({
+            el:'#rrapp',
+            data:{
+                username: '',
+                password: '',
+                validateCode: '',
+                captcha: '',
+                error: false,
+                errorMsg: '',
+                smsCode:'',
+                smsCodeShow:true,
+                showGetCode:true,
+                count:'',
+                timer:null
+            },
+            beforeCreate: function(){
+                if(self != top){
+                    top.location.href = self.location.href;
+                }
+            },
+            methods: {
+                //验证码
+                refreshCode: function(){
+                    var url = ctx + "captcha/captchaImage?type=" + captchaType + "&s=" + Math.random();
+                    $(".imgcode").attr("src", url);
+                },
+                login: function (event) {
+                    var params = {
+                        username:vm.username,
+                        password:vm.password,
+                        validateCode:vm.validateCode
+                    }
+                    if(vm.smsCodeShow){
+                        params.smsCode = vm.smsCode
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: ctx+"login",
+                        data: params,
+                        dataType: "json",
+                        success: function(result){
+                            if(result.code == 0){//登录成功
+                                window.sessionStorage.setItem("lockcms", false);
+                                parent.location.href ='index.html';
+                            }else{
+                                vm.error = true;
+                                vm.errorMsg = result.msg;
+                                vm.refreshCode();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        $(document).keyup(function(event){
+            if(event.keyCode ==13){
+                vm.login();
+            }
+        });
+    </script>
+</body>
+
+</html>

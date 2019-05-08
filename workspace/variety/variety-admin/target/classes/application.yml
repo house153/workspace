@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: variety-admin
+  # 环境 dev|test|pro
+  profiles:
+    active: dev
+  thymeleaf:
+    mode: HTML
+    encoding: utf-8
+    # 禁用缓存
+    cache: false
+    servlet:
+      content-type: text/html; charset=utf-8
+  messages:
+    #国际化资源文件路径
+    basename: i18n/messages
+    encoding: UTF-8
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  #文件上传
+  servlet:
+     multipart:
+       max-file-size:  10MB
+       max-request-size:  10MB
+  devtools:
+    restart:
+      #热部署开关
+      enabled: true
+server:
+  port: 2000
+
+demo:
+  service:
+    version: 1.0.0
+

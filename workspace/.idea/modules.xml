@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/pom-base/pom-base.iml" filepath="$PROJECT_DIR$/pom-base/pom-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/variety/variety.iml" filepath="$PROJECT_DIR$/variety/variety.iml" />
+      <module fileurl="file://$PROJECT_DIR$/variety/variety-admin/variety-admin.iml" filepath="$PROJECT_DIR$/variety/variety-admin/variety-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/variety/variety-api/variety-api.iml" filepath="$PROJECT_DIR$/variety/variety-api/variety-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/variety/variety-common/variety-common.iml" filepath="$PROJECT_DIR$/variety/variety-common/variety-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/workspace.iml" filepath="$PROJECT_DIR$/.idea/workspace.iml" />
+    </modules>
+  </component>
+</project>

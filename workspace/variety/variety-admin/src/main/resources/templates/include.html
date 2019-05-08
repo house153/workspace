@@ -1,0 +1,64 @@
+<head th:fragment="header">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico" th:href="@{/favicon.ico}">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet"/>
+
+    <!-- bootstrap-table 表格插件样式 -->
+    <link th:href="@{/js/plugins/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet"/>
+    <link th:href="@{/js/plugins/bootstrap-treetable/bootstrap-treetable.css}" rel="stylesheet"/>
+
+    <link th:href="@{/css/animate.css}" rel="stylesheet"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/js/plugins/select/select2.css}" rel="stylesheet"/>
+    <link th:href="@{/css/checkbox.css}" rel="stylesheet"/>
+    <link th:href="@{/css/frame.css}" rel="stylesheet"/>
+</head>
+<div th:fragment="footer">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+
+    <!-- bootstrap-table 表格插件 -->
+    <script th:src="@{/js/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script th:src="@{/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"></script>
+    <script th:src="@{/js/plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.min.js}"></script>
+    <script th:src="@{/js/plugins/bootstrap-table/extensions/toolbar/bootstrap-table-toolbar.min.js}"></script>
+
+    <!-- jquery-validate 表单验证插件 -->
+    <script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+    <script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+    <script th:src="@{/js/plugins/validate/jquery.validate.extend.js}"></script>
+
+    <!-- jquery-validate 表单树插件 -->
+    <script th:src="@{/js/plugins/bootstrap-treetable/bootstrap-treetable.js}"></script>
+
+    <!-- jquery-export 表格导出插件 -->
+    <script th:src="@{/js/plugins/bootstrap-table/extensions/export/bootstrap-table-export.js}"></script>
+    <script th:src="@{/js/plugins/bootstrap-table/extensions/export/tableExport.js}"></script>
+
+
+    <!-- 遮罩层 -->
+    <script th:src="@{/js/plugins/blockUI/jquery.blockUI.js}"></script>
+
+    <!--全屏控件-->
+    <script src="js/plugins/slimscroll/jquery.slimscroll.min.js" th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+
+    <script src="js/vue.min.js" th:src="@{/js/vue.min.js}"></script>
+    <script src="js/plugins/layer/layer.min.js" th:src="@{/js/plugins/layer/layer.min.js}"></script>
+    <script src="js/plugins/layui/layui.js" th:src="@{/js/plugins/layui/layui.js}"></script>
+
+    <!--webuploader-->
+    <link th:href="@{/js/plugins/webuploader/webuploader.css}" rel="stylesheet"/>
+    <script src="js/plugins/webuploader/webuploader.js" th:src="@{/js/plugins/webuploader/webuploader.js}"></script>
+
+    <!-- 自定义js -->
+    <script src="js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="js/content.js" th:src="@{/js/content.js}"></script>
+    <script src="js/frame.js" th:src="@{/js/frame.js}"></script>
+
+    <script th:inline="javascript"> var ctx = [[@{/}]]; </script>
+</div>

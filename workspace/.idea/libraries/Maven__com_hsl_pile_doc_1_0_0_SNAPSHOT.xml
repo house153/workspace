@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.hsl:pile-doc:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/hsl/pile-doc/1.0.0-SNAPSHOT/pile-doc-1.0.0-20181212.012515-8.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/hsl/pile-doc/1.0.0-SNAPSHOT/pile-doc-1.0.0-20181212.012515-8-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/hsl/pile-doc/1.0.0-SNAPSHOT/pile-doc-1.0.0-20181212.012515-8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.house.variety.modules.auth.mapper.SysUserMapper">
+
+    <!-- 定义数据库字段与实体对象的映射关系  -->
+    <resultMap type="com.house.variety.modules.auth.entity.SysUser" id="userBean">
+        <id column="user_id" property="userId"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="login_name" property="loginName"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_type" property="userType"/>
+        <result column="email" property="email"/>
+        <result column="phonenumber" property="phonenumber"/>
+        <result column="sex" property="sex"/>
+        <result column="avatar" property="avatar"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="status" property="status"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="sms_check" property="smsCheck"/>
+        <result column="login_ip" property="loginIp"/>
+        <result column="login_date" property="loginDate"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark"/>
+        <result column="dept_paths" property="deptPaths"/>
+
+        <!-- 一对一的关系 -->
+        <association property="dept" javaType="com.house.variety.modules.auth.entity.SysDept">
+            <id column="dept_id" property="deptId"/>
+            <result column="dept_name" property="deptName"/>
+            <result column="ancestors" property="ancestors"/>
+        </association>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        t.user_id,
+        t.dept_id,
+        t.login_name,
+        t.user_name,
+        t.user_type,
+        t.email,
+        t.phonenumber,
+        t.sex,
+        t.avatar,
+        t.PASSWORD,
+        t.salt,
+        t.STATUS,
+        t.del_flag,
+        t.sms_check,
+        t.login_ip,
+        t.login_date,
+        t.create_by,
+        t.create_time,
+        t.update_by,
+        t.update_time,
+        t.remark,
+        t.dept_paths
+    </sql>
+
+    <select id="pageList" resultMap="userBean">
+        select
+        <include refid="Base_Column_List"/> ,
+        d.dept_name,
+        d.ancestors
+        from sys_user t
+        left join sys_dept d on d.dept_id = t.dept_id
+        <where>
+            <![CDATA[ user_id <> 1 ]]>
+            <if test="ew.delFlag != null and ew.delFlag != ''">
+                and t.del_flag = #{ew.delFlag}
+            </if>
+           <if test="ew.loginName != null and ew.loginName != ''">
+                and t.login_name like concat('%',#{ew.loginName},'%')
+           </if>
+            <if test="ew.phonenumber != null and ew.phonenumber != ''">
+                and t.phonenumber like concat('%',#{ew.phonenumber},'%')
+            </if>
+            <if test="ew.status != null and ew.status != ''">
+                and t.status = #{ew.status}
+            </if>
+           <!-- <if test="ew.deptId != null and ew.deptId != ''">
+                and t.dept_id = #{ew.deptId}
+            </if>-->
+            <if test="ew.deptPaths != null and ew.deptPaths != ''">
+                and t.dept_paths like concat(#{ew.deptPaths},'%')
+            </if>
+            <if test="ew.params != null and ew.params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(t.create_time,'%y%m%d') &gt;= date_format(#{ew.params.beginTime},'%y%m%d')
+            </if>
+            <if test="ew.params != null and ew.params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(t.create_time,'%y%m%d') &lt;= date_format(#{ew.params.endTime},'%y%m%d')
+            </if>
+        </where>
+        <if test="ew.orderByColumn != null and ew.orderByColumn != ''">
+            order by ${ew.orderByColumn}
+            <choose>
+                <when test="ew.isAsc">
+                    ASC
+                </when>
+                <otherwise>
+                    DESC
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="selectUserById" parameterType="java.lang.Long" resultMap="userBean">
+        SELECT
+        <include refid="Base_Column_List"/> ,
+        d.dept_name,
+        d.ancestors
+    FROM
+        sys_user t
+        LEFT JOIN sys_dept d ON t.dept_id = d.dept_id
+        where t.user_id = #{userId}
+    </select>
+</mapper>

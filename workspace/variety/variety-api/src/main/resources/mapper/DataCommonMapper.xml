@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.variety.mapper.DataCommonMapper">
+
+     <select id="selectListMonthlyTurnover" resultType="com.house.variety.dto.MonthlyTurnover">
+         SELECT CONCAT(tt.dates,' 00:00:00') `x`,ROUND(tt.y)Y , ROUND(IFNULL(SUM(t4.moneys),0)) z FROM (
+            SELECT t1.dates,IFNULL(SUM(t2.transport_fee),0)Y FROM (
+            SELECT CONCAT(YEAR(CURDATE()),'-','01') dates
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','02')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','03')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','04')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','05')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','06')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','07')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','08')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','09')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','10')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','11')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','12')
+            ) t1
+            LEFT JOIN order_info t2 ON (t1.dates = DATE_FORMAT (t2.gmt_create,'%Y-%m')) AND t2.order_status !=9
+
+            WHERE 1=1
+            GROUP BY t1.dates
+            )tt
+            LEFT JOIN (
+            SELECT dates,SUM(moneys) moneys FROM (
+            SELECT DATE_FORMAT (create_at,'%Y-%m') dates,SUM(money) moneys FROM money.transaction_gather  GROUP BY  DATE_FORMAT (create_at,'%Y-%m')
+            UNION ALL
+            SELECT DATE_FORMAT (create_at,'%Y-%m') dates ,SUM(money) moneys FROM money.transaction_withdrawal GROUP BY  DATE_FORMAT (create_at,'%Y-%m')
+            ) t3 GROUP BY t3.dates
+            )t4 ON tt.dates =  t4.dates
+            GROUP BY tt.dates
+     </select>
+
+    <select id="selectLatestOrderStatistics" resultType="com.house.variety.dto.LatestOrderStatistics">
+                            SELECT '今日订单票数' title, ROUND(t1.counts ) pv FROM (
+                                SELECT COUNT(*) counts
+                                 FROM order_info WHERE (TO_DAYS( NOW( ) )) = TO_DAYS(gmt_create ) AND order_status !=9
+                                 ) t1
+                                 UNION
+                                 SELECT '今日订单件数' title, ROUND(IFNULL(t1.total_pieces,0 ))pv FROM (
+                                SELECT
+                                       SUM(total_piece) total_pieces
+                                 FROM order_info WHERE (TO_DAYS( NOW( ) )) = TO_DAYS(gmt_create ) AND order_status !=9
+                                 ) t1
+                                  UNION
+                                 SELECT '今日订单重量' title, ROUND(IFNULL(t1.total_weights,0 ))pv FROM (
+                                SELECT
+                                       SUM(total_weight) total_weights
+                                 FROM order_info WHERE (TO_DAYS( NOW( ) )) = TO_DAYS(gmt_create ) AND order_status !=9
+                                 ) t1
+                                   UNION
+                                 SELECT '今日订单体积' title, ROUND(IFNULL(t1.total_sizes,0 ))pv FROM (
+                                SELECT
+                                      SUM(total_size) total_sizes
+                                 FROM order_info WHERE (TO_DAYS( NOW( ) )) = TO_DAYS(gmt_create ) AND order_status !=9
+                                 ) t1
+                                 UNION
+
+                                 SELECT '昨日订单票数' title, ROUND(t1.counts ) pv FROM (
+                                SELECT COUNT(*) counts
+                                 FROM order_info WHERE (TO_DAYS( NOW( ) )-1) = TO_DAYS(gmt_create ) AND order_status !=9
+                                 ) t1
+                                 UNION
+                                 SELECT '昨日订单件数' title, ROUND(IFNULL(t1.total_pieces,0 ))pv FROM (
+                                SELECT
+                                       SUM(total_piece) total_pieces
+                                 FROM order_info WHERE (TO_DAYS( NOW( ) )-1) = TO_DAYS(gmt_create ) AND order_status !=9
+                                 ) t1
+                                  UNION
+                                 SELECT '昨日订单重量' title, ROUND(IFNULL(t1.total_weights,0 ))pv FROM (
+                                SELECT
+                                       SUM(total_weight) total_weights
+                                 FROM order_info WHERE (TO_DAYS( NOW( ) )-1) = TO_DAYS(gmt_create ) AND order_status !=9
+                                 ) t1
+                                   UNION
+                                 SELECT '昨日订单体积' title, ROUND(IFNULL(t1.total_sizes,0 ))pv FROM (
+                                SELECT
+                                      SUM(total_size) total_sizes
+                                 FROM order_info WHERE (TO_DAYS( NOW( ) )-1) = TO_DAYS(gmt_create ) AND order_status !=9
+                                 ) t1
+                                 UNION
+
+                                  SELECT '累计订单票数' title, ROUND(t1.counts ) pv FROM (
+                                SELECT COUNT(*) counts
+                                 FROM order_info WHERE  1=1 AND order_status !=9
+                                 ) t1
+                                 UNION
+                                 SELECT '累计订单件数' title, ROUND(IFNULL(t1.total_pieces,0 ))pv FROM (
+                                SELECT
+                                       SUM(total_piece) total_pieces
+                                 FROM order_info WHERE 1=1 AND order_status !=9
+                                 ) t1
+                                  UNION
+                                 SELECT '累计订单重量' title, ROUND(IFNULL(t1.total_weights,0 ))pv FROM (
+                                SELECT
+                                       SUM(total_weight) total_weights
+                                 FROM order_info WHERE 1=1 AND order_status !=9
+                                 ) t1
+                                   UNION
+                                 SELECT '累计订单体积' title, ROUND(IFNULL(t1.total_sizes,0 ))pv FROM (
+                                SELECT
+                                      SUM(total_size) total_sizes
+                                 FROM order_info WHERE 1=1 AND order_status !=9
+                                 ) t1
+
+    </select>
+
+    <select id="selectMonthlyOrdersNumber" resultType="com.house.variety.dto.MonthlyOrdersNumber">
+        SELECT CONCAT(t1.dates,' 00:00:00') `x`,IFNULL(COUNT(*),0) `y`, IFNULL(SUM(total_piece),0) `z` FROM (
+            SELECT CONCAT(YEAR(CURDATE()),'-','01') dates
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','02')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','03')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','04')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','05')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','06')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','07')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','08')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','09')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','10')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','11')
+            UNION
+            SELECT CONCAT(YEAR(CURDATE()),'-','12')
+            ) t1
+            LEFT JOIN order_info t2 ON (t1.dates = DATE_FORMAT (t2.gmt_create,'%Y-%m')) AND t2.order_status !=9
+            WHERE 1=1
+            GROUP BY t1.dates;
+
+    </select>
+
+    <select id="selectCountWallet" resultType="long">
+        SELECT ROUND(IFNULL(
+            (SELECT SUM(money) FROM money.transaction_gather),0))+ROUND(IFNULL((
+            SELECT SUM(money) FROM money.transaction_withdrawal),0)) `value` FROM DUAL;
+    </select>
+
+    <select id="selectCountFreight" resultType="long">
+        SELECT ROUND(SUM(transport_fee)) FROM order_info WHERE order_status !=9 ;
+    </select>
+
+    <select id="selectNewOrder" resultType="string">
+        SELECT CONCAT('新增订单！发货人:',send_man,' 收货人:',receive_man,
+' 订单运费:',ROUND(transport_fee/100,2),'元',' 订单件数:',total_piece,
+'件 订单重量:',ROUND(total_weight/1000,2),'吨') contents
+ FROM order_info WHERE 1=1 ORDER BY gmt_create DESC LIMIT 1;
+    </select>
+
+    <select id="selectBizBranchCount" resultType="long">
+          SELECT COUNT(*) FROM sys_biz_branch WHERE direct = 0;
+    </select>
+    <select id="selectSysUserCount" resultType="long">
+          SELECT COUNT(*) FROM sys_user WHERE STATUS =1;
+    </select>
+
+    <select id="selectBizBranchCountByMonth" parameterType="string" resultType="long">
+        SELECT COUNT(*) FROM sys_biz_branch WHERE direct = 0 AND DATE_FORMAT (gmt_created,'%Y-%m')&lt;= #{month};
+    </select>
+
+    <select id="selectSysUserCountByMonth" parameterType="string"  resultType="long">
+        SELECT COUNT(*) FROM sys_user WHERE STATUS =1 AND DATE_FORMAT (create_time,'%Y-%m')&lt;= #{month} ;
+    </select>
+
+    <select id="selectCountCitys" resultType="long">
+
+            SELECT COUNT(*) FROM(
+    SELECT DISTINCT t1.citys FROM(
+    SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(AREA, '-', 2) , '-', -1) citys FROM sys_biz_branch) t1 WHERE t1.citys IS NOT NULL)t2;
+    </select>
+
+    <select id="selectCountLine" resultType="long">
+        SELECT COUNT(*) FROM line_config;
+    </select>
+
+    <select id="selectCountCitysByMonth" resultType="long">
+        SELECT COUNT(*) FROM(
+        SELECT DISTINCT t1.citys FROM(
+        SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(AREA, '-', 2) , '-', -1) citys FROM sys_biz_branch
+        where DATE_FORMAT (gmt_created,'%Y-%m')&lt;=#{month}) t1 WHERE t1.citys IS NOT NULL)t2;
+
+    </select>
+
+    <select id="selectCountLineByMonth" resultType="long">
+        SELECT COUNT(*) FROM sys_user WHERE STATUS =1 AND DATE_FORMAT (create_time,'%Y-%m')&lt;=#{month} ;
+    </select>
+</mapper>

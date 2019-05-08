@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.house.variety.modules.auth.mapper.SysDeptMapper">
+
+	<sql id="Base_Column_List">
+		t.dept_id,
+		t.parent_id,
+		t.ancestors,
+		t.dept_name,
+		t.order_num,
+		t.leader,
+		t.phone,
+		t.email,
+		t.STATUS,
+		t.create_by,
+		t.create_time,
+		t.update_by,
+		t.update_time,
+		t.type,
+		t.extend_a,
+		t.extend_b
+    </sql>
+
+    <select id="selectDeptById" parameterType="java.lang.Long" resultType="com.house.variety.modules.auth.entity.SysDept">
+		select <include refid="Base_Column_List"></include> ,
+			(select dept_name from sys_dept where dept_id = t.parent_id) parent_name
+		from sys_dept t
+		where dept_id = #{deptId}
+	</select>
+
+</mapper>

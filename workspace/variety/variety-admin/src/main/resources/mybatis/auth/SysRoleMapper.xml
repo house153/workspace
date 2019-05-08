@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.house.variety.modules.auth.mapper.SysRoleMapper">
+
+	<sql id="Base_Column_List">
+    	t.role_id,
+		t.role_name,
+		t.role_key,
+		t.role_sort,
+		t.status,
+		t.create_by,
+		t.create_time,
+		t.update_by,
+		t.update_time,
+		t.remark,
+		t.dept_id,
+		t.dept_paths
+    </sql>
+
+    <!--根据用户ID查询角色列表-->
+    <select id="selectRolesByUserId" parameterType="java.lang.Long" resultType="com.house.variety.modules.auth.entity.SysRole">
+		SELECT DISTINCT r.role_id, r.role_name, r.role_key
+		FROM sys_user u
+			 LEFT JOIN sys_user_role ur ON u.user_id = ur.user_id
+			 LEFT JOIN sys_role r ON ur.role_id = r.role_id
+		WHERE ur.user_id = #{userId}
+	</select>
+
+
+	<select id="pageList" resultType="com.house.variety.modules.auth.entity.SysRole">
+		select
+		<include refid="Base_Column_List"/> ,
+		d.dept_name
+		from sys_role t
+		left join sys_dept d on d.dept_id = t.dept_id
+		<where>
+			<![CDATA[ role_id <> 1 ]]>
+			<if test="ew.roleName != null and ew.roleName != ''">
+				and t.role_name like concat('%',#{ew.roleName},'%')
+			</if>
+			<if test="ew.roleKey != null and ew.roleKey != ''">
+				and t.role_key like concat('%',#{ew.roleKey},'%')
+			</if>
+			<if test="ew.status != null and ew.status != ''">
+				and t.status = #{ew.status}
+			</if>
+		    <if test="ew.deptId != null and ew.deptId != ''">
+                 and t.dept_id = #{ew.deptId}
+			</if>
+			<if test="ew.deptPaths != null and ew.deptPaths != ''">
+				and t.dept_paths like concat(#{ew.deptPaths},'%')
+			</if>
+			<if test="ew.params != null and ew.params.beginTime != ''"><!-- 开始时间检索 -->
+				AND date_format(t.create_time,'%y%m%d') &gt;= date_format(#{ew.params.beginTime},'%y%m%d')
+			</if>
+			<if test="ew.params != null and ew.params.endTime != ''"><!-- 结束时间检索 -->
+				AND date_format(t.create_time,'%y%m%d') &lt;= date_format(#{ew.params.endTime},'%y%m%d')
+			</if>
+		</where>
+		<if test="ew.orderByColumn != null and ew.orderByColumn != ''">
+			order by ${ew.orderByColumn}
+			<choose>
+				<when test="ew.isAsc">
+					ASC
+				</when>
+				<otherwise>
+					DESC
+				</otherwise>
+			</choose>
+		</if>
+	</select>
+</mapper>
